@@ -1,0 +1,125 @@
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct elemento
+{
+	char Documento[15];
+	char Nombre[25];
+	char Apellido[25];
+	int sueldo;
+}T_Elemento; 
+
+
+struct pila
+{
+  T_Elemento Dato;
+  struct pila *sig;
+};
+typedef struct pila T_Pila;
+typedef T_Pila *Ptr_Pila;
+
+void insertar(Ptr_Pila *, T_Elemento);
+void Buscar(T_Pila *);
+void visualizar(T_Pila *);
+
+main() 
+{
+	T_Pila *L=NULL;
+	T_Elemento N;
+	char opc;  //opcion para switch
+	FILE *Ar;
+	
+    if ((Ar=fopen("Datos.dat","r"))==NULL)
+    {
+		printf("\nError en apertura......\n");
+        system("pause");
+	}
+	
+	fscanf(Ar,"%s %s %s %d",&N.Documento, &N.Nombre, &N.Apellido, &N.sueldo);
+    while (!feof(Ar))
+	{	
+		insertar(&L,N);
+        fscanf(Ar,"%s %s %s %d",&N.Documento, &N.Nombre, &N.Apellido, &N.sueldo); 
+	}
+        
+	do
+	{
+		system("cls"); /* borramos la pantalla */
+    	printf("1.- Mostrar \n");
+		printf("2.- Buscar\n");
+		printf("3.- Salir\n");
+		printf("\nDigite Opcion: ");
+		opc=getch( );
+		
+		switch(opc)
+		{
+			case '1':
+				visualizar(L);
+				break;
+			case '2':
+				Buscar(L);
+				break;
+		}
+	}
+	while (opc!='3');
+	fclose(Ar);	
+}
+
+void insertar(Ptr_Pila *Q, T_Elemento X)
+{
+   T_Pila *AUX;
+   AUX = (T_Pila *)malloc(sizeof(struct pila));
+   AUX->Dato= X;
+   if ((*Q)==NULL)
+	{	
+		(*Q)=AUX; 
+		AUX->sig=NULL;
+	}
+   else
+	{
+		AUX->sig=(*Q);
+		(*Q)=AUX;
+	}
+}
+
+void Buscar(T_Pila *Q)
+{
+	system("cls");
+   T_Elemento N;
+   int sw=0;
+   printf("\nDigite el Apellido a buscar: ");
+   scanf("%s",N.Apellido);
+  
+	while(Q!=NULL)
+	{ 
+		if(strcmp(N.Apellido,Q->Dato.Apellido)==0)
+		{ 
+			printf("\n\n\tEl Apellido [%s] Fue Encontrado Con Exito\n",N.Apellido);
+			sw = 1;
+		}
+		Q= Q->sig;         
+	}
+     
+   if (sw==0)
+   {
+		printf("\n\n\tEl Apellido [%s] No Fue Encontrado En La Pila\n",N.Apellido);
+   }
+    printf("\n\n");
+	system("pause");
+}
+
+void visualizar(T_Pila *Q)
+{
+    if (Q==NULL) return;
+    system("cls");
+    printf("\nNombres de la lista\n\n");
+    while (Q!=NULL)
+    {
+	    printf("%s			%s			%s			%d\n",Q->Dato.Documento,Q->Dato.Nombre,Q->Dato.Apellido,Q->Dato.sueldo);
+	    Q=Q->sig;
+    }
+    printf("\n");
+    system("pause");
+}
